@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<form action="modify" method="post" th:object="${user}" >
+    编号： <input type="text" th:field="*{id}" readonly> <br>
+    姓名：<input type="text" th:field="*{name}" > <br>
+    年龄 ： <input type="text" th:field="*{age}" > <br>
+    <input type="submit" value="修改">
+
+
+</form>
+
+
+
+
+
+<!--th:text对特殊字符进行转义，等价于内联方式[[${ }]]
+<div th:text="${name}">aaaaaa</div>
+-->
+<!--th:text对特殊字符不进行转义，等价于内联方式[(${ })]
+<div th:utext="${name}">bbbbbb</div>
+-->
+<!--使用内联方式-->
+<div>[[${username}]]aaa</div>
+<div>[(${username})]bbb</div>
+</body>
+</html>

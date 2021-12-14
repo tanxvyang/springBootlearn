@@ -1,0 +1,100 @@
+@Value("${user.Address}") 不支持复杂的对象形式，并且只能注入一个
+@ConfigurationProperties(prefix = "user")  可以批量注入
+
+4.多环境配置
+    可以为不同的环境提供不同的配置信息，如开发环境、测试环境、生产环境等
+        两个方法
+            创建多个properties 文件
+                    spring.profiles.active=prod
+            定义yml文档块
+                    定义多个文档块表示不同的配置
+ 5.加载外部properties属性文件
+    使用@PropertySource()
+
+
+
+    五。自动配置的执行原理
+        1.执行流程
+          1. 执行过程 1. SpringBoot应用启动时会加载主程序类，开启了自动配置功能@EnableAutoConfiguration
+          2. @EnableAutoConfiguration作用 扫描所有jar包类路径下的META­INF/spring.factories文件，获取到EnableAutoConfiguration对应的值，将 这些自动配置类添加容器中
+          3. 通过这些自动配置类完成相应的配置功能
+
+
+
+//表示该类是一个配置类，相当与以前我们编写的spring配置文件
+@Configuration(
+    proxyBeanMethods = false
+)
+//启动HttpProperties类的ConfigurationProperties功能，通过配置文件为属性注入值，并将其添加到容器中
+@EnableConfigurationProperties({HttpProperties.class})
+
+//如果当前应用是一个web应用，则该配置类生效，否则不生效
+@ConditionalOnWebApplication(
+    type = Type.SERVLET
+)
+
+
+//包含CharacterEncodingFilter类则生效，否则不生效
+@ConditionalOnClass({CharacterEncodingFilter.class})
+
+//如果配置文件中有spring.http.encoding.enabled选项，则该配置类生效，否则不生效，默认设置为true，默认生效
+@ConditionalOnProperty(
+    prefix = "spring.http.encoding",
+    value = {"enabled"},
+    matchIfMissing = true
+)
+public class HttpEncodingAutoConfiguration {
+    private final Encoding properties;
+
+//将容器中的HttpProperties注入
+    public HttpEncodingAutoConfiguration(HttpProperties properties) {
+        this.properties = properties.getEncoding();
+    }
+
+//将返回的CharacterEncodingFilter对象添加到容器中作为一个bean
+    @Bean
+    //如果容器中没有这个组件，则添加
+    @ConditionalOnMissingBean
+    public CharacterEncodingFilter characterEncodingFilter() {
+        CharacterEncodingFilter filter = new OrderedCharacterEncodingFilter();
+        filter.setEncoding(this.properties.getCharset().name());
+        filter.setForceRequestEncoding(this.properties.shouldForce(org.springframework.boot.autoconfigure.http.HttpProperties.Encoding.Type.REQUEST));
+        filter.setForceResponseEncoding(this.properties.shouldForce(org.springframework.boot.autoconfigure.http.HttpProperties.Encoding.Type.RESPONSE));
+        return filter;
+    }
+
+    @Bean
+    public HttpEncodingAutoConfiguration.LocaleCharsetMappingsCustomizer localeCharsetMappingsCustomizer() {
+        return new HttpEncodingAutoConfiguration.LocaleCharsetMappingsCustomizer(this.properties);
+    }
+
+    private static class LocaleCharsetMappingsCustomizer implements WebServerFactoryCustomizer<ConfigurableServletWebServerFactory>, Ordered {
+        private final Encoding properties;
+
+        LocaleCharsetMappingsCustomizer(Encoding properties) {
+            this.properties = properties;
+        }
+
+        public void customize(ConfigurableServletWebServerFactory factory) {
+            if (this.properties.getMapping() != null) {
+                factory.setLocaleCharsetMappings(this.properties.getMapping());
+            }
+
+        }
+
+        public int getOrder() {
+            return 0;
+        }
+    }
+}
+
+
+六web开发
+    使用springboot开发web应用的步骤
+        1.创建springboot应用，选择需要的stater
+        2.在配置文件中
+
+
+
+
+

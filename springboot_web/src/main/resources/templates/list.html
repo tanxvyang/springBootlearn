@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:text="${user.name}"></div>
+<div th:text="${user['age']}"></div>
+<div th:text="${users[1].name}">取集合中的指定元素</div>
+<div th:text="${users.size()}">取集合中的指定元素</div>
+<!--
+<div>元素个数：[[${users.size()}]]</div>
+-->
+
+
+<!--使用内置的基本对象-->
+
+</body>
+</html>

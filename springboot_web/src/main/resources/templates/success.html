@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<!-- 导入thymeleaf的命名空间-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+<body>
+<h1>Hellow  World</h1>
+<div th:text="${name}"></div>
+<!--无法识别jsp模板的代码片段
+<form:inputText name="userName" value="${user.name}" />
+-->
+<p th:if="${age}>=18">成年</p>
+<p th:unless="${age}<18">不小于，成年</p>
+
+<p th:switch="${role}">
+    <li th:case="admin">admin</li>
+    <li th:case="teacher">teacher</li>
+    <li th:case="student">student</li>
+
+
+</p>
+
+
+
+<input type="text" name="userName" value="James Carrot" th:value="${name}" />
+<div>[[${name}]]aaa</div>
+<div>[(${name})]bbb</div>
+
+
+
+<hr>
+<!--th:object,th:field-->
+<h3>修改用户信息</h3>
+<form action="modify" method="post" th:object="${user}" >
+    编号： <input type="text" th:field="*{id}" readonly> <br>
+    姓名：<input type="text" th:field="*{name}" > <br>
+    年龄 ： <input type="text" th:field="*{age}" > <br>
+    <input type="submit" value="修改">
+
+
+</form>
+
+<br>
+<hr>
+<!--引入include中header。html中的frament=head代码片段-->
+<div th:include="include/header::head"></div>
+<div th:insert="include/footer::copy"></div>
+<div th:replace="include/header::head"></div>
+
+</body>
+</html>

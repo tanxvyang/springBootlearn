@@ -1,0 +1,80 @@
+server:
+  port: 8081
+spring:
+  profiles:
+   active: dev
+  servlet:
+    context-path: /springboot03
+    #大小写敏感的
+    #采用缩进表示层级关系
+    #缩进不允许使用Tab键，只能使用空格
+    #缩进数目不重要，但是要将相同层级的元素左侧对齐
+    # 使用#表示注释
+    # 用key：空格value的方式   例如   port: 8081
+
+#基本用法
+  #YAML支持的数据结构有三种
+      #字面量：单个的，不可再分的值
+      #对象：键值对的集合
+      #数组：一组按次序排列的值
+  #用法
+  # 1. 字面量：普通的值，如数字，字符串，布尔值
+  #           number：12.3
+  #           str：hello
+  #           name：'tmoe cruise'  #如果包含空格或特殊字符，则必须使用引号引起来，单双引号都可
+  #                                 #单引号不会特殊字符进行转义，如、n
+  #2.对象：也称映射Map，包含属性和值
+  #         写法1：换行
+  #          user：
+  #              name:tom
+  #              age:12
+  #              sex:man
+#     写法2：行内写法
+#         user：{name:tom,age:30,sex:man}
+#
+# 3.数组，如List Set 等
+#    写法1：一组短横线开头的行
+#           name：
+#               -tom
+#               -jack
+#               -alice
+#
+#   写法2：行内写
+#         name：{tom，jacke，alice}
+#
+#
+#
+#
+#3.为属性注入值
+#user:
+#  username: admin2
+  age: 19
+  status: true
+  birthday: 2020/5/20
+#  address:
+#    privince: 江苏
+#    city: 南京
+  list:
+      -loist
+      -lo
+      -loste
+  map: {k1: v1,k2: v2}
+#
+
+
+---  #分割文档块
+spring:
+  profiles: dev
+server:
+  port: 9991
+
+---
+spring:
+  profiles: test
+server:
+  port: 9992
+---
+spring:
+  profiles: prod
+server:
+  port: 9993
