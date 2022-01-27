@@ -10,4 +10,6 @@ public interface UserService {
     public User selectById(int id);
     public void insert(User user);
     public PageInfo<User> findByPage(int pageNum, int pageSize);
+    public void updateBatch(List<User> list);
+    public void updatetowparam(List<User> list);
 }

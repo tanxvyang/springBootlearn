@@ -8,4 +8,6 @@ public interface UserMapper {
    public List<User> selectAll();
     public User selectById(int id);
     public void insert(User user);
+    public void updateBatch(List<User> list);
+    public void updatetowparam(List<User> list);
 }

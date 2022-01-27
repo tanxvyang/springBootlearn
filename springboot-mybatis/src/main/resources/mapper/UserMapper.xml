@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.txymybatis.mapper.UserMapper">
-    <sql id="userColumn">id,username,password</sql>
+    <sql id="userColumn"> id, username,password,age,sex</sql>
     <select id="selectAll" resultType="User">
     select <include refid="userColumn"/>
         from t_user
@@ -16,8 +16,65 @@
     </select>
     <insert id="insert">
         insert into t_user
-          (username,password)
+          (username,password,age)
         values
-        (#{username},#{password})
+        (#{username},#{password},#{age})
     </insert>
+<!--测试批量修改001-->
+    <update id="updateBatch"  parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update t_user
+            <set>
+                password=${item.password}
+            </set>
+            where id = ${item.id}
+        </foreach>
+    </update>
+
+    <update id="updatetowparam" parameterType="list">
+        update t_user
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="password = case" suffix="end,">
+                <foreach collection="list" item="user" index="index">
+                <if test="user.password!=null">
+                        when id = #{user.id} and sex = 3 then #{user.password}
+                        when id = #{user.id} and sex = 0 then 000  <!--    保持原始数据不变  -->
+                        when id = #{user.id} and sex = 1 then t_user.password
+                </if>
+                </foreach>
+            </trim>
+            <trim prefix="username = case" suffix="end,">
+                <foreach collection="list" item="user" index="index">
+                    <if test="user.username!=null and user.sex == 3">
+                        when id = #{user.id}  then #{user.username}
+                    </if>
+                    <if test="user.username!=null and user.sex == 2">
+                        when id = #{user.id} then "2222name"
+                    </if>
+                    <if test="user.username!=null and user.sex == 1">
+                        when id = #{user.id} then "usernmae001"
+                    </if>
+                    <if test="user.username!=null and user.sex == 0">
+                        when id = #{user.id} then t_user.username
+                    </if>
+
+                </foreach>
+            </trim>
+            <trim prefix="age = case" suffix="end,">
+                <foreach collection="list" item="user" index="index">
+                    <if test="user.username!=null and user.sex == 3">
+                        when id = #{user.id}  then #{user.age}
+                    </if>
+                    <if test="user.username!=null and user.sex != 3">
+                        when id = #{user.id} then t_user.age
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where id in
+        <foreach collection="list" item="user" index="index" separator="," open="(" close=")">
+            #{user.id}
+        </foreach>
+    </update>
+
 </mapper>

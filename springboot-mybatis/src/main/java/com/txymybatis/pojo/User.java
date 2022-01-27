@@ -6,11 +6,26 @@ public class User {
     private  Integer age;
     private  Integer id;
 
+    public Integer getSex() {
+        return sex;
+    }
+
+    public void setSex(Integer sex) {
+        this.sex = sex;
+    }
+
+    private  Integer sex;
+
     public User(String username, String password, Integer age, Integer id) {
         this.username = username;
         this.password = password;
         this.age = age;
         this.id = id;
+    }
+    public User(String username, String password, Integer age) {
+        this.username = username;
+        this.password = password;
+        this.age = age;
     }
 
     public Integer getId() {
